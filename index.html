@@ -186,6 +186,44 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
 
+    .day-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .day-nav-btn {
+      background: #fff;
+      border: 1.5px solid #e6e6e6;
+      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #464feb;
+      flex-shrink: 0;
+      transition: background 0.15s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .day-nav-btn:hover { background: #eef0ff; border-color: #464feb; }
+    .day-nav-btn:disabled { color: #ccc; border-color: #f0f0f0; cursor: default; }
+    .day-nav-btn:disabled:hover { background: #fff; border-color: #f0f0f0; }
+
+    .day-nav-label {
+      flex: 1;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #1a1a2e;
+    }
+
+    .day-nav-label.today { color: #464feb; }
+
     @media (hover: none) {
       .dislike-btn:hover { border-color: #e6e6e6; color: #888; }
     }
@@ -214,6 +252,11 @@
     <button id="btn-lunch" onclick="setType('lunch')">&#127869; Ebéd</button>
     <button id="btn-breakfast" onclick="setType('breakfast')">&#127774; Reggeli / Vacsora</button>
   </div>
+  <div class="day-nav">
+    <button class="day-nav-btn" id="btn-prev" onclick="stepDay(-1)">&#8249;</button>
+    <span class="day-nav-label today" id="day-label">Ma</span>
+    <button class="day-nav-btn" id="btn-next" onclick="stepDay(1)">&#8250;</button>
+  </div>
   <div id="app"></div>
 </main>
 
@@ -235,7 +278,23 @@
     return `${y}-${m}-${d}`;
   }
 
+  function offsetDate(n) {
+    const dt = new Date();
+    dt.setDate(dt.getDate() + n);
+    return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+  }
+
+  function dayLabel(n) {
+    if (n === 0) return 'Ma';
+    if (n === 1) return 'Holnap';
+    if (n === -1) return 'Tegnap';
+    const [y, m, d] = offsetDate(n).split('-').map(Number);
+    const HU_MONTHS = ['jan.','febr.','márc.','ápr.','máj.','jún.','júl.','aug.','szept.','okt.','nov.','dec.'];
+    return `${HU_MONTHS[m-1]} ${d}.`;
+  }
+
   let activeType = localStorage.getItem('mealType') || 'lunch';
+  let dayOffset = 0;
 
   function getDataset() {
     return activeType === 'lunch' ? FOODS_DATA : BREAKFAST_DATA;
@@ -276,19 +335,22 @@
       ? `<h3>Hozzávalók</h3><ul class="ingredient-list">${meal.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>`
       : '';
 
-    app.innerHTML = `
-      <p class="date-label">${formatDate(meal.date)}</p>
-      <div class="meal-card">
-        <h2>${meal.name}</h2>
-        ${ingredientsHtml}
-      </div>
+    const dislikeBtnHtml = dayOffset === 0 ? `
       <button class="dislike-btn" onclick="dislikeCurrent(${meal.id})">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/>
           <path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
         </svg>
         Nem kérem, mást kérek
-      </button>`;
+      </button>` : '';
+
+    app.innerHTML = `
+      <p class="date-label">${formatDate(meal.date)}</p>
+      <div class="meal-card">
+        <h2>${meal.name}</h2>
+        ${ingredientsHtml}
+      </div>
+      ${dislikeBtnHtml}`;
   }
 
   function updateToggleUI() {
@@ -296,12 +358,25 @@
     document.getElementById('btn-breakfast').classList.toggle('active', activeType === 'breakfast');
   }
 
+  function updateDayNav() {
+    const dates = getDataset().map(m => m.date).sort();
+    const lbl = document.getElementById('day-label');
+    lbl.textContent = dayLabel(dayOffset);
+    lbl.className = 'day-nav-label' + (dayOffset === 0 ? ' today' : '');
+    document.getElementById('btn-prev').disabled = offsetDate(dayOffset - 1) < dates[0];
+    document.getElementById('btn-next').disabled = offsetDate(dayOffset + 1) > dates[dates.length - 1];
+  }
+
   function loadMealForType() {
-    const today = todayStr();
+    const data = getDataset();
+    const targetDate = offsetDate(dayOffset);
+    if (dayOffset !== 0) {
+      return data.find(item => item.date === targetDate) || null;
+    }
     const day = new Date().getDate(); // 1–31
-    const fallbackId = Math.min(day, getDataset().length);
-    return getDataset().find(item => item.date === today && !disliked.has(item.id))
-        || getDataset().find(item => item.id === fallbackId && !disliked.has(item.id))
+    const fallbackId = Math.min(day, data.length);
+    return data.find(item => item.date === targetDate && !disliked.has(item.id))
+        || data.find(item => item.id === fallbackId && !disliked.has(item.id))
         || pickRandom();
   }
 
@@ -310,6 +385,13 @@
     localStorage.setItem('mealType', type);
     disliked = loadDisliked();
     updateToggleUI();
+    updateDayNav();
+    render(loadMealForType());
+  };
+
+  window.stepDay = function(delta) {
+    dayOffset += delta;
+    updateDayNav();
     render(loadMealForType());
   };
 
@@ -326,6 +408,7 @@
   };
 
   updateToggleUI();
+  updateDayNav();
   render(loadMealForType());
 </script>
 </body>
