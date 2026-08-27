@@ -125,6 +125,41 @@
 
     .no-meal strong { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; }
 
+    .dislike-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px;
+      min-height: 44px;
+      background: none;
+      border: 1.5px solid #e6e6e6;
+      border-radius: 10px;
+      color: #888;
+      font-size: 0.95rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dislike-btn:hover { border-color: #e05252; color: #e05252; }
+
+    .dislike-btn svg { flex-shrink: 0; }
+
+    .all-disliked {
+      text-align: center;
+      padding: 32px 0;
+      color: #888;
+      font-size: 0.95rem;
+    }
+
+    @media (hover: none) {
+      .dislike-btn:hover { border-color: #e6e6e6; color: #888; }
+    }
+
     @media (max-width: 430px) {
       .meal-card { padding: 20px 16px; }
       .meal-card h2 { font-size: 1.3rem; }
@@ -140,7 +175,6 @@
 <header>
   <h1>🥗 FoodForThought</h1>
   <nav>
-    <a href="index.html" class="active">Mai étel</a>
     <a href="shopping.html">Bevásárlólista</a>
   </nav>
 </header>
@@ -166,13 +200,25 @@
     return `${y}-${m}-${d}`;
   }
 
+  // Disliked IDs persist for the session only
+  const disliked = new Set(JSON.parse(sessionStorage.getItem('disliked') || '[]'));
+
+  function saveDisliked() {
+    sessionStorage.setItem('disliked', JSON.stringify([...disliked]));
+  }
+
+  function pickRandom() {
+    const pool = FOODS_DATA.filter(m => !disliked.has(m.id));
+    if (!pool.length) return null;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
   function render(meal) {
     if (!meal) {
-      app.innerHTML = `
-        <div class="no-meal">
-          <strong>Ma nincs tervezett étel.</strong>
-          Nézd meg a <a href="shopping.html">bevásárlólistát</a> a közelgő napokhoz.
-        </div>`;
+      const exhausted = disliked.size > 0 && FOODS_DATA.every(m => disliked.has(m.id));
+      app.innerHTML = exhausted
+        ? `<div class="all-disliked">Minden ételt elutasítottál. <button onclick="resetDisliked()" style="color:#464feb;background:none;border:none;cursor:pointer;font-size:inherit;text-decoration:underline;">Újrakezdés</button></div>`
+        : `<div class="no-meal"><strong>Ma nincs tervezett étel.</strong> Nézd meg a <a href="shopping.html">bevásárlólistát</a> a közelgő napokhoz.</div>`;
       return;
     }
 
@@ -184,17 +230,36 @@
         <ul class="ingredient-list">
           ${meal.ingredients.map(i => `<li>${i}</li>`).join('')}
         </ul>
-      </div>`;
+      </div>
+      <button class="dislike-btn" onclick="dislikeCurrent(${meal.id})">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/>
+          <path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+        </svg>
+        Nem kérem, mást kérek
+      </button>`;
   }
+
+  window.dislikeCurrent = function(id) {
+    disliked.add(id);
+    saveDisliked();
+    render(pickRandom());
+  };
+
+  window.resetDisliked = function() {
+    disliked.clear();
+    saveDisliked();
+    render(pickRandom());
+  };
 
   const today = todayStr();
   const day   = new Date().getDate(); // 1–31
   // Fall back to the item whose id matches today's day-of-month (clamped to list length)
   const fallbackId = Math.min(day, FOODS_DATA.length);
-  const meal = FOODS_DATA.find(item => item.date === today)
-            || FOODS_DATA.find(item => item.id === fallbackId)
-            || null;
-  render(meal);
+  const initial = FOODS_DATA.find(item => item.date === today)
+               || FOODS_DATA.find(item => item.id === fallbackId && !disliked.has(item.id))
+               || pickRandom();
+  render(initial);
 </script>
 </body>
 </html>
