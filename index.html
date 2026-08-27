@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Mai étel – FoodForThought</title>
+  <meta name="theme-color" content="#464feb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: #f7f8fc;
+      color: #222;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e6e6e6;
+      padding: env(safe-area-inset-top) 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: calc(56px + env(safe-area-inset-top));
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #464feb;
+      letter-spacing: 0.01em;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #464feb;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 6px;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    nav a:hover { background: #eef0ff; }
+    nav a.active { background: #464feb; color: #fff; }
+
+    main {
+      max-width: 560px;
+      margin: 28px auto;
+      padding: 0 16px max(32px, env(safe-area-inset-bottom));
+    }
+
+    .date-label {
+      font-size: 0.85rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .meal-card {
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 2px 8px rgba(70,79,235,0.06);
+    }
+
+    .meal-card h2 {
+      font-size: 1.5rem;
+      color: #1a1a2e;
+      margin-bottom: 20px;
+    }
+
+    .meal-card h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .ingredient-list {
+      list-style: none;
+    }
+
+    .ingredient-list li {
+      padding: 8px 0;
+      min-height: 44px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ingredient-list li:last-child { border-bottom: none; }
+
+    .ingredient-list li::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #464feb;
+      flex-shrink: 0;
+    }
+
+    .no-meal {
+      text-align: center;
+      padding: 48px 0;
+      color: #888;
+    }
+
+    .no-meal strong { display: block; font-size: 1.1rem; color: #444; margin-bottom: 8px; }
+
+    @media (max-width: 430px) {
+      .meal-card { padding: 20px 16px; }
+      .meal-card h2 { font-size: 1.3rem; }
+    }
+
+    @media (hover: none) {
+      nav a:hover { background: transparent; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🥗 FoodForThought</h1>
+  <nav>
+    <a href="index.html" class="active">Mai étel</a>
+    <a href="shopping.html">Bevásárlólista</a>
+  </nav>
+</header>
+
+<main>
+  <div id="app"></div>
+</main>
+
+<script src="foods-data.js"></script>
+<script>
+  const app = document.getElementById('app');
+
+  function formatDate(dateStr) {
+    const [y, m, d] = dateStr.split('-');
+    return `${y}. ${m}. ${d}.`;
+  }
+
+  function todayStr() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function render(meal) {
+    if (!meal) {
+      app.innerHTML = `
+        <div class="no-meal">
+          <strong>Ma nincs tervezett étel.</strong>
+          Nézd meg a <a href="shopping.html">bevásárlólistát</a> a közelgő napokhoz.
+        </div>`;
+      return;
+    }
+
+    app.innerHTML = `
+      <p class="date-label">${formatDate(meal.date)}</p>
+      <div class="meal-card">
+        <h2>${meal.name}</h2>
+        <h3>Hozzávalók</h3>
+        <ul class="ingredient-list">
+          ${meal.ingredients.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+      </div>`;
+  }
+
+  const today = todayStr();
+  const day   = new Date().getDate(); // 1–31
+  // Fall back to the item whose id matches today's day-of-month (clamped to list length)
+  const fallbackId = Math.min(day, FOODS_DATA.length);
+  const meal = FOODS_DATA.find(item => item.date === today)
+            || FOODS_DATA.find(item => item.id === fallbackId)
+            || null;
+  render(meal);
+</script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Bevásárlólista – FoodForThought</title>
+  <meta name="theme-color" content="#464feb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: #f7f8fc;
+      color: #222;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e6e6e6;
+      padding: env(safe-area-inset-top) 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: calc(56px + env(safe-area-inset-top));
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #464feb;
+      letter-spacing: 0.01em;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #464feb;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 6px;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    nav a:hover { background: #eef0ff; }
+    nav a.active { background: #464feb; color: #fff; }
+
+    main {
+      max-width: 680px;
+      margin: 28px auto;
+      padding: 0 16px max(48px, env(safe-area-inset-bottom));
+    }
+
+    .page-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #1a1a2e;
+    }
+
+    .page-subtitle {
+      font-size: 0.88rem;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    /* Range selector */
+    .range-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .range-bar label {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .range-bar select {
+      border: 1px solid #e6e6e6;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 1rem; /* 16px prevents iOS auto-zoom */
+      background: #fff;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .range-bar select:focus { outline: 2px solid #464feb; }
+
+    /* Day cards */
+    .day-card {
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .day-card.today { border-color: #464feb; }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      min-height: 52px;
+      background: #f5f5f5;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .day-card.today .day-header { background: #eef0ff; }
+
+    .day-header .day-info { display: flex; flex-direction: column; gap: 2px; }
+
+    .day-header .day-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .day-header .day-date {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .day-card.today .day-header .day-name { color: #464feb; }
+
+    .today-badge {
+      font-size: 0.72rem;
+      background: #464feb;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .chevron {
+      color: #aaa;
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+
+    .day-body {
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease, padding 0.2s;
+    }
+
+    .day-body.open {
+      max-height: 600px;
+      padding: 12px 20px 16px;
+    }
+
+    .meal-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+
+    .ingredient-list {
+      list-style: none;
+    }
+
+    .ingredient-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      min-height: 44px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ingredient-list li:last-child { border-bottom: none; }
+
+    .ingredient-list li.checked {
+      opacity: 0.4;
+      text-decoration: line-through;
+    }
+
+    .ingredient-list li input[type="checkbox"] {
+      accent-color: #464feb;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .no-items {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+    }
+
+    .no-items strong { display: block; color: #444; margin-bottom: 6px; }
+
+    @media (max-width: 430px) {
+      .day-header { padding: 12px 16px; }
+      .day-body.open { padding: 12px 16px 16px; }
+      .page-title { font-size: 1.2rem; }
+    }
+
+    @media (hover: none) {
+      nav a:hover { background: transparent; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🥗 FoodForThought</h1>
+  <nav>
+    <a href="index.html">Mai étel</a>
+    <a href="shopping.html" class="active">Bevásárlólista</a>
+  </nav>
+</header>
+
+<main>
+  <h2 class="page-title">Bevásárlólista</h2>
+  <p class="page-subtitle" id="subtitle"></p>
+
+  <div class="range-bar">
+    <label for="range">Megjelenítés:</label>
+    <select id="range">
+      <option value="3">Következő 3 nap</option>
+      <option value="7" selected>Következő 7 nap</option>
+      <option value="14">Következő 14 nap</option>
+      <option value="all">Összes étel</option>
+    </select>
+  </div>
+
+  <div id="app"></div>
+</main>
+
+<script src="foods-data.js"></script>
+<script>
+  const app   = document.getElementById('app');
+  const sub   = document.getElementById('subtitle');
+  const range = document.getElementById('range');
+
+  const HU_DAYS = ['Vasárnap','Hétfő','Kedd','Szerda','Csütörtök','Péntek','Szombat'];
+  const HU_MONTHS = ['január','február','március','április','május','június',
+                     'július','augusztus','szeptember','október','november','december'];
+
+  function todayStr() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  }
+
+  function formatDateHu(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return `${y}. ${HU_MONTHS[m-1]} ${d}.`;
+  }
+
+  function dayName(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return HU_DAYS[new Date(y, m-1, d).getDay()];
+  }
+
+  function addDays(str, n) {
+    const [y, m, d] = str.split('-').map(Number);
+    const dt = new Date(y, m-1, d + n);
+    return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+  }
+
+  let allData = [];
+
+  function render() {
+    const val   = range.value;
+    const today = todayStr();
+    let meals;
+
+    if (val === 'all') {
+      meals = allData;
+    } else {
+      const days  = parseInt(val);
+      const limit = addDays(today, days);
+      meals = allData.filter(m => m.date >= today && m.date < limit);
+    }
+
+    if (meals.length === 0) {
+      app.innerHTML = `<div class="no-items"><strong>Nincs étel ebben az időszakban.</strong></div>`;
+      sub.textContent = '';
+      return;
+    }
+
+    sub.textContent = `${meals.length} étel, ${meals.reduce((s,m) => s + m.ingredients.length, 0)} hozzávaló`;
+
+    app.innerHTML = meals.map(meal => {
+      const isToday = meal.date === today;
+      return `
+        <div class="day-card${isToday ? ' today' : ''}" id="card-${meal.id}">
+          <div class="day-header" onclick="toggleCard(${meal.id})">
+            <div class="day-info">
+              <span class="day-name">${dayName(meal.date)} ${isToday ? '<span class="today-badge">Ma</span>' : ''}</span>
+              <span class="day-date">${formatDateHu(meal.date)}</span>
+            </div>
+            <span class="chevron" id="chev-${meal.id}">▼</span>
+          </div>
+          <div class="day-body${isToday ? ' open' : ''}" id="body-${meal.id}">
+            <div class="meal-name">${meal.name}</div>
+            <ul class="ingredient-list">
+              ${meal.ingredients.map((ing, i) => `
+                <li id="li-${meal.id}-${i}" onclick="toggleItem(${meal.id},${i})">
+                  <input type="checkbox" id="cb-${meal.id}-${i}" onclick="event.stopPropagation();toggleItem(${meal.id},${i})" />
+                  ${ing}
+                </li>`).join('')}
+            </ul>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Restore checked state from sessionStorage
+    meals.forEach(meal => {
+      meal.ingredients.forEach((_, i) => {
+        if (sessionStorage.getItem(`check-${meal.id}-${i}`) === '1') {
+          const li = document.getElementById(`li-${meal.id}-${i}`);
+          const cb = document.getElementById(`cb-${meal.id}-${i}`);
+          if (li) li.classList.add('checked');
+          if (cb) cb.checked = true;
+        }
+      });
+    });
+  }
+
+  window.toggleCard = function(id) {
+    const body = document.getElementById(`body-${id}`);
+    const chev = document.getElementById(`chev-${id}`);
+    const open = body.classList.toggle('open');
+    chev.style.transform = open ? 'rotate(180deg)' : '';
+  };
+
+  window.toggleItem = function(mealId, idx) {
+    const li = document.getElementById(`li-${mealId}-${idx}`);
+    const cb = document.getElementById(`cb-${mealId}-${idx}`);
+    const checked = li.classList.toggle('checked');
+    cb.checked = checked;
+    sessionStorage.setItem(`check-${mealId}-${idx}`, checked ? '1' : '0');
+  };
+
+  range.addEventListener('change', render);
+
+  allData = FOODS_DATA;
+  render();
+</script>
+</body>
+</html>
