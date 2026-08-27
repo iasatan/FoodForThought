@@ -6,7 +6,7 @@ const BREAKFAST_DATA = [
   { "id": 5,  "date": "2026-09-05", "name": "Vöröslencsekrém pirítóscsíkokra",                   "ingredients": [] },
   { "id": 6,  "date": "2026-09-06", "name": "Köleskása puhára főzve körtedarabokkal",             "ingredients": [] },
   { "id": 7,  "date": "2026-09-07", "name": "Zabkása sült almával",                               "ingredients": [] },
-  { "id": 8,  "date": "2026-09-08", "name": "Tofu rántotta puha kenyérrel",                       "ingredients": [] },
+  { "id": 8,  "date": "2026-09-08", "name": "Rántotta puha kenyérrel",                       "ingredients": [] },
   { "id": 9,  "date": "2026-09-09", "name": "Sült körte zabpehellyel",                            "ingredients": [] },
   { "id": 10, "date": "2026-09-10", "name": "Babos mini pogácsa",                                 "ingredients": [] },
   { "id": 11, "date": "2026-09-11", "name": "Csicseriborsós pogácsa",                             "ingredients": [] },
