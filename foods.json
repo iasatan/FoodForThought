@@ -1,0 +1,353 @@
+[
+  {
+    "id": 1,
+    "date": "2026-09-01",
+    "name": "Paradicsomos-cukkinis tészta",
+    "ingredients": [
+      "500 g tészta",
+      "2 cukkini",
+      "500 g paradicsom",
+      "1 hagyma",
+      "2 gerezd fokhagyma",
+      "bazsalikom vagy oregánó",
+      "reszelt sajt"
+    ]
+  },
+  {
+    "id": 2,
+    "date": "2026-09-02",
+    "name": "Gombapaprikás bulgurral",
+    "ingredients": [
+      "500 g csiperke",
+      "1 hagyma",
+      "1 paprika",
+      "2 dl tejföl",
+      "250 g bulgur",
+      "pirospaprika"
+    ]
+  },
+  {
+    "id": 3,
+    "date": "2026-09-03",
+    "name": "Zöldségleves gazdagon",
+    "ingredients": [
+      "3 répa",
+      "2 fehérrépa",
+      "karalábé",
+      "zeller",
+      "2 burgonya",
+      "zöldborsó",
+      "leveszöld"
+    ]
+  },
+  {
+    "id": 4,
+    "date": "2026-09-04",
+    "name": "Sült krumpli, tzatziki, grillezett cukkini",
+    "ingredients": [
+      "1,5 kg burgonya",
+      "1 kígyóuborka",
+      "400 g görög joghurt",
+      "2 cukkini",
+      "fokhagyma"
+    ]
+  },
+  {
+    "id": 5,
+    "date": "2026-09-05",
+    "name": "Lecsó rizzsel",
+    "ingredients": [
+      "6 paprika",
+      "6 paradicsom",
+      "1 hagyma",
+      "300 g rizs",
+      "opcionálisan tojás"
+    ]
+  },
+  {
+    "id": 6,
+    "date": "2026-09-06",
+    "name": "Vegán fasírt burgonyapürével",
+    "ingredients": [
+      "2 konzerv vörösbab vagy csicseriborsó",
+      "zsemlemorzsa",
+      "1 hagyma",
+      "1 kg burgonya",
+      "tej",
+      "vaj"
+    ]
+  },
+  {
+    "id": 7,
+    "date": "2026-09-07",
+    "name": "Tejfölös-gombás tészta",
+    "ingredients": [
+      "500 g tészta",
+      "500 g gomba",
+      "2 dl tejföl",
+      "hagyma",
+      "sajt"
+    ]
+  },
+  {
+    "id": 8,
+    "date": "2026-09-08",
+    "name": "Rakott karfiol",
+    "ingredients": [
+      "1 nagy karfiol",
+      "250 g rizs",
+      "450 g tejföl",
+      "3 tojás",
+      "sajt"
+    ]
+  },
+  {
+    "id": 9,
+    "date": "2026-09-09",
+    "name": "Paradicsomos rizottó",
+    "ingredients": [
+      "300 g rizs",
+      "500 g paradicsom",
+      "hagyma",
+      "fokhagyma",
+      "parmezán vagy trappista"
+    ]
+  },
+  {
+    "id": 10,
+    "date": "2026-09-10",
+    "name": "Cukkinifasírt",
+    "ingredients": [
+      "2 nagy cukkini",
+      "2 tojás",
+      "zsemlemorzsa",
+      "fokhagymás joghurt"
+    ]
+  },
+  {
+    "id": 11,
+    "date": "2026-09-11",
+    "name": "Gombás bulgursaláta",
+    "ingredients": [
+      "250 g bulgur",
+      "400 g gomba",
+      "paradicsom",
+      "uborka",
+      "petrezselyem"
+    ]
+  },
+  {
+    "id": 12,
+    "date": "2026-09-12",
+    "name": "Sütőtökkrémleves",
+    "ingredients": [
+      "1 kg sütőtök",
+      "1 hagyma",
+      "2 burgonya",
+      "főzőtejszín"
+    ]
+  },
+  {
+    "id": 13,
+    "date": "2026-09-13",
+    "name": "Rántott sajt röstivel",
+    "ingredients": [
+      "600 g sajt",
+      "1 kg burgonya",
+      "tojás",
+      "liszt",
+      "zsemlemorzsa"
+    ]
+  },
+  {
+    "id": 14,
+    "date": "2026-09-14",
+    "name": "Rakott burgonya zöldségesen",
+    "ingredients": [
+      "1,5 kg burgonya",
+      "4 tojás",
+      "450 g tejföl",
+      "paprika",
+      "hagyma"
+    ]
+  },
+  {
+    "id": 15,
+    "date": "2026-09-15",
+    "name": "Gomba gyros pitával",
+    "ingredients": [
+      "500 g gomba",
+      "pita",
+      "paradicsom",
+      "uborka",
+      "joghurt",
+      "fokhagyma"
+    ]
+  },
+  {
+    "id": 16,
+    "date": "2026-09-16",
+    "name": "Paradicsomos-bazsalikomos tészta",
+    "ingredients": [
+      "500 g tészta",
+      "700 g paradicsom",
+      "bazsalikom",
+      "sajt"
+    ]
+  },
+  {
+    "id": 17,
+    "date": "2026-09-17",
+    "name": "Karfiol curry rizzsel",
+    "ingredients": [
+      "1 karfiol",
+      "curry por",
+      "kókusztej",
+      "300 g rizs"
+    ]
+  },
+  {
+    "id": 18,
+    "date": "2026-09-18",
+    "name": "Töltött paprika húsmentesen",
+    "ingredients": [
+      "8 paprika",
+      "250 g rizs",
+      "1 konzerv lencse",
+      "paradicsomszósz"
+    ]
+  },
+  {
+    "id": 19,
+    "date": "2026-09-19",
+    "name": "Gombás rizottó",
+    "ingredients": [
+      "500 g gomba",
+      "300 g rizs",
+      "hagyma",
+      "sajt"
+    ]
+  },
+  {
+    "id": 20,
+    "date": "2026-09-20",
+    "name": "Tepsis zöldségek bulgurral",
+    "ingredients": [
+      "cukkini",
+      "paprika",
+      "hagyma",
+      "sárgarépa",
+      "250 g bulgur"
+    ]
+  },
+  {
+    "id": 21,
+    "date": "2026-09-21",
+    "name": "Lencsefőzelék tükörtojással",
+    "ingredients": [
+      "500 g lencse",
+      "tejföl",
+      "fokhagyma",
+      "4-6 tojás"
+    ]
+  },
+  {
+    "id": 22,
+    "date": "2026-09-22",
+    "name": "Zöldborsós rizs, rántott karfiol",
+    "ingredients": [
+      "300 g rizs",
+      "450 g zöldborsó",
+      "1 karfiol",
+      "panír alapanyagok"
+    ]
+  },
+  {
+    "id": 23,
+    "date": "2026-09-23",
+    "name": "Cukkinikrémleves",
+    "ingredients": [
+      "3 cukkini",
+      "1 hagyma",
+      "főzőtejszín",
+      "pirítós"
+    ]
+  },
+  {
+    "id": 24,
+    "date": "2026-09-24",
+    "name": "Padlizsános paradicsomos tészta",
+    "ingredients": [
+      "1 nagy padlizsán",
+      "500 g paradicsom",
+      "500 g tészta"
+    ]
+  },
+  {
+    "id": 25,
+    "date": "2026-09-25",
+    "name": "Burgonyafőzelék fasírttal",
+    "ingredients": [
+      "1,5 kg burgonya",
+      "tej",
+      "tejföl",
+      "vegán vagy hagyományos fasírt"
+    ]
+  },
+  {
+    "id": 26,
+    "date": "2026-09-26",
+    "name": "Tökfőzelék",
+    "ingredients": [
+      "1 kg főzőtök",
+      "tejföl",
+      "kapor",
+      "fokhagyma"
+    ]
+  },
+  {
+    "id": 27,
+    "date": "2026-09-27",
+    "name": "Sütőtökös rizottó",
+    "ingredients": [
+      "600 g sütőtök",
+      "300 g rizs",
+      "hagyma",
+      "sajt"
+    ]
+  },
+  {
+    "id": 28,
+    "date": "2026-09-28",
+    "name": "Gombás tortilla",
+    "ingredients": [
+      "tortilla lapok",
+      "500 g gomba",
+      "sajt",
+      "paprika",
+      "kukorica"
+    ]
+  },
+  {
+    "id": 29,
+    "date": "2026-09-29",
+    "name": "Brokkolis-tejfölös tészta",
+    "ingredients": [
+      "500 g tészta",
+      "1 brokkoli",
+      "2 dl tejföl",
+      "sajt"
+    ]
+  },
+  {
+    "id": 30,
+    "date": "2026-09-30",
+    "name": "Maradékmentő zöldséges bulgur",
+    "ingredients": [
+      "maradék paprika",
+      "maradék cukkini",
+      "maradék gomba",
+      "250 g bulgur"
+    ]
+  }
+]
