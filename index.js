@@ -32,6 +32,7 @@ let activeType = localStorage.getItem('mealType') || 'lunch';
 let dayOffset = 0;
 let includeIngredient = '';
 let excludeIngredient = '';
+let includeMode = 'all';
 
 function getDataset() {
   return activeType === 'lunch' ? FOODS_DATA : BREAKFAST_DATA;
@@ -52,10 +53,15 @@ function ingredientTerms(value) {
 }
 
 function getFilteredDataset() {
-  return getDataset().filter(meal =>
-    ingredientTerms(includeIngredient).every(term => matchesIngredient(meal, term))
+  const includeTerms = ingredientTerms(includeIngredient);
+  return getDataset().filter(meal => {
+    const includeMatches = includeMode === 'any'
+      ? includeTerms.some(term => matchesIngredient(meal, term))
+      : includeTerms.every(term => matchesIngredient(meal, term));
+
+    return includeMatches
       && ingredientTerms(excludeIngredient).every(term => !matchesIngredient(meal, term))
-  );
+  });
 }
 
 function dislikedKey() {
@@ -175,6 +181,7 @@ window.resetDisliked = function() {
 function updateIngredientFilters() {
   includeIngredient = document.getElementById('include-ingredient').value.trim();
   excludeIngredient = document.getElementById('exclude-ingredient').value.trim();
+  includeMode = document.getElementById('include-mode').value;
   dayOffset = 0;
   updateDayNav();
   render(loadMealForType());
@@ -182,6 +189,7 @@ function updateIngredientFilters() {
 
 document.getElementById('include-ingredient').addEventListener('input', updateIngredientFilters);
 document.getElementById('exclude-ingredient').addEventListener('input', updateIngredientFilters);
+document.getElementById('include-mode').addEventListener('change', updateIngredientFilters);
 
 updateToggleUI();
 updateDayNav();
