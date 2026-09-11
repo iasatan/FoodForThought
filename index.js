@@ -30,9 +30,9 @@ function dayLabel(n) {
 
 let activeType = localStorage.getItem('mealType') || 'lunch';
 let dayOffset = 0;
-let includeIngredient = '';
+let includeAllIngredients = '';
+let includeAnyIngredients = '';
 let excludeIngredient = '';
-let includeMode = 'all';
 
 function getDataset() {
   return activeType === 'lunch' ? FOODS_DATA : BREAKFAST_DATA;
@@ -53,14 +53,13 @@ function ingredientTerms(value) {
 }
 
 function getFilteredDataset() {
-  const includeTerms = ingredientTerms(includeIngredient);
+  const includeAllTerms = ingredientTerms(includeAllIngredients);
+  const includeAnyTerms = ingredientTerms(includeAnyIngredients);
+  const excludeTerms = ingredientTerms(excludeIngredient);
   return getDataset().filter(meal => {
-    const includeMatches = includeMode === 'any'
-      ? includeTerms.some(term => matchesIngredient(meal, term))
-      : includeTerms.every(term => matchesIngredient(meal, term));
-
-    return includeMatches
-      && ingredientTerms(excludeIngredient).every(term => !matchesIngredient(meal, term))
+    return includeAllTerms.every(term => matchesIngredient(meal, term))
+      && (!includeAnyTerms.length || includeAnyTerms.some(term => matchesIngredient(meal, term)))
+      && excludeTerms.every(term => !matchesIngredient(meal, term));
   });
 }
 
@@ -179,17 +178,17 @@ window.resetDisliked = function() {
 };
 
 function updateIngredientFilters() {
-  includeIngredient = document.getElementById('include-ingredient').value.trim();
+  includeAllIngredients = document.getElementById('include-all-ingredients').value.trim();
+  includeAnyIngredients = document.getElementById('include-any-ingredients').value.trim();
   excludeIngredient = document.getElementById('exclude-ingredient').value.trim();
-  includeMode = document.getElementById('include-mode').value;
   dayOffset = 0;
   updateDayNav();
   render(loadMealForType());
 }
 
-document.getElementById('include-ingredient').addEventListener('input', updateIngredientFilters);
+document.getElementById('include-all-ingredients').addEventListener('input', updateIngredientFilters);
+document.getElementById('include-any-ingredients').addEventListener('input', updateIngredientFilters);
 document.getElementById('exclude-ingredient').addEventListener('input', updateIngredientFilters);
-document.getElementById('include-mode').addEventListener('change', updateIngredientFilters);
 
 updateToggleUI();
 updateDayNav();

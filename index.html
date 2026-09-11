@@ -26,17 +26,18 @@
   </div>
   <form class="ingredient-filters" onsubmit="return false">
     <label>
-      <span>Legyen benne</span>
-      <input id="include-ingredient" type="search" placeholder="pl. gomba, rizs" autocomplete="off" />
-      <select id="include-mode" aria-label="A megadott összetevők kapcsolata">
-        <option value="all">Mindegyik (ÉS)</option>
-        <option value="any">Legalább egy (VAGY)</option>
-      </select>
+      <span>Legyen benne mind</span>
+      <input id="include-all-ingredients" type="search" placeholder="pl. gomba, rizs" autocomplete="off" />
+    </label>
+    <label>
+      <span>Legyen benne legalább egy</span>
+      <input id="include-any-ingredients" type="search" placeholder="pl. csirke, tofu" autocomplete="off" />
     </label>
     <label>
       <span>Ne legyen benne</span>
-      <input id="exclude-ingredient" type="search" placeholder="pl. tejföl, sajt" autocomplete="off" />
+      <input id="exclude-ingredient" type="search" placeholder="pl. vegán tejföl, vegán sajt" autocomplete="off" />
     </label>
+    
   </form>
   <div class="day-nav">
     <button class="day-nav-btn" id="btn-prev" onclick="stepDay(-1)">&#8249;</button>
